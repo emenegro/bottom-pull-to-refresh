@@ -23,6 +23,17 @@
 
 #import "MNMBPTRViewController.h"
 
+@interface MNMBPTRViewController()
+
+/**
+ * Loads the table
+ *
+ * @private
+ */
+- (void)loadTable;
+
+@end
+
 @implementation MNMBPTRViewController
 
 @synthesize table = table_;
@@ -54,9 +65,7 @@
         
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:table_ withClient:self];
     
-    [table_ reloadData];
-    
-    [pullToRefreshManager_ relocatePullToRefreshView];
+    [self loadTable];
 }
 
 /**
@@ -69,6 +78,19 @@
     
     [pullToRefreshManager_ release];
     pullToRefreshManager_ = nil;
+}
+
+#pragma mark -
+#pragma mark Aux view methods
+
+/*
+ * Loads the table
+ */
+- (void)loadTable {
+    
+    [table_ reloadData];
+    
+    [pullToRefreshManager_ tableViewReloadFinished];
 }
 
 #pragma mark -
@@ -181,9 +203,7 @@
     
     reloads_++;
     
-    [table_ performSelector:@selector(reloadData) withObject:nil afterDelay:1.5f];
-    
-    [pullToRefreshManager_ performSelector:@selector(tableViewReloadFinished) withObject:nil afterDelay:1.5f];
+    [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
 }
 
 @end
