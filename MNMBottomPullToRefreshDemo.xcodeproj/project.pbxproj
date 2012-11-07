@@ -20,6 +20,7 @@
 		5725C99114CDBDFF00241A2E /* MNMBottomPullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725C98C14CDBDFF00241A2E /* MNMBottomPullToRefreshView.m */; };
 		5725C99414CDBE4600241A2E /* MNMBPTRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5725C99314CDBE4600241A2E /* MNMBPTRViewController.m */; };
 		5725C99614CDBE6400241A2E /* MNMBPTRViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5725C99514CDBE6400241A2E /* MNMBPTRViewController.xib */; };
+		5734E9F7164A79430062487F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5734E9F6164A79430062487F /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		5725C99214CDBE4600241A2E /* MNMBPTRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MNMBPTRViewController.h; sourceTree = "<group>"; };
 		5725C99314CDBE4600241A2E /* MNMBPTRViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MNMBPTRViewController.m; sourceTree = "<group>"; };
 		5725C99514CDBE6400241A2E /* MNMBPTRViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MNMBPTRViewController.xib; sourceTree = "<group>"; };
+		5734E9F6164A79430062487F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 		5725C95F14CDBDB600241A2E = {
 			isa = PBXGroup;
 			children = (
+				5734E9F6164A79430062487F /* Default-568h@2x.png */,
 				5725C97414CDBDB700241A2E /* MNMBottomPullToRefreshDemo */,
 				5725C96D14CDBDB700241A2E /* Frameworks */,
 				5725C96B14CDBDB700241A2E /* Products */,
@@ -180,6 +183,7 @@
 				5725C98E14CDBDFF00241A2E /* MNMBottomPullToRefreshArrow.png in Resources */,
 				5725C98F14CDBDFF00241A2E /* MNMBottomPullToRefreshArrow@2x.png in Resources */,
 				5725C99614CDBE6400241A2E /* MNMBPTRViewController.xib in Resources */,
+				5734E9F7164A79430062487F /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,10 +262,11 @@
 		5725C98314CDBDB700241A2E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MNMBottomPullToRefreshDemo/MNMBottomPullToRefreshDemo-Prefix.pch";
 				INFOPLIST_FILE = "MNMBottomPullToRefreshDemo/MNMBottomPullToRefreshDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -270,10 +275,11 @@
 		5725C98414CDBDB700241A2E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MNMBottomPullToRefreshDemo/MNMBottomPullToRefreshDemo-Prefix.pch";
 				INFOPLIST_FILE = "MNMBottomPullToRefreshDemo/MNMBottomPullToRefreshDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -48,6 +48,6 @@
 /**
  * Provides readwrite access to the table_. Exported to IB
  */
-@property (nonatomic, readwrite, retain) IBOutlet UITableView *table;
+@property (nonatomic, readwrite, strong) IBOutlet UITableView *table;
 
 @end

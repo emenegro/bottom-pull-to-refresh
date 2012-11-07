@@ -24,7 +24,24 @@
 #import "MNMBottomPullToRefreshManager.h"
 #import "MNMBottomPullToRefreshView.h"
 
+CGFloat const kAnimationDuration = 0.2f;
+
 @interface MNMBottomPullToRefreshManager()
+
+/**
+ * Pull-to-refresh view
+ */
+@property (nonatomic, readwrite, strong) MNMBottomPullToRefreshView *pullToRefreshView;
+
+/**
+ * Table view which p-t-r view will be added
+ */
+@property (nonatomic, readwrite, weak) UITableView *table;
+
+/**
+ * Client object that observes changes
+ */
+@property (nonatomic, readwrite, weak) id<MNMBottomPullToRefreshManagerClient> client;
 
 /**
  * Returns the correct offset to apply to the pull-to-refresh view, depending on contentSize
@@ -38,33 +55,12 @@
 
 @implementation MNMBottomPullToRefreshManager
 
-#pragma mark -
-#pragma mark Memory management
-
-/**
- * Deallocates not used memory
- */
-- (void)dealloc {
-    [pullToRefreshView_ release];
-    pullToRefreshView_ = nil;
-    
-    [table_ release];
-    table_ = nil;
-    
-    [super dealloc];
-}
+@synthesize pullToRefreshView = pullToRefreshView_;
+@synthesize table = table_;
+@synthesize client = client_;
 
 #pragma mark -
 #pragma mark Instance initialization
-
-/**
- * Implemented by subclasses to initialize a new object (the receiver) immediately after memory for it has been allocated.
- *
- * @return nil because that instance must be initialized with custom constructor
- */
-- (id)init {
-    return nil;
-}
 
 /*
  * Initializes the manager object with the information to link view and table
@@ -74,10 +70,8 @@
     if (self = [super init]) {
         
         client_ = client;
-        
-        table_ = [table retain];
-        
-        pullToRefreshView_ = [[MNMBottomPullToRefreshView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(table_.frame), height)];
+        table_ = table;        
+        pullToRefreshView_ = [[MNMBottomPullToRefreshView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth([table_ frame]), height)];
     }
     
     return self;
@@ -93,13 +87,13 @@
     
     CGFloat offset = 0.0f;        
     
-    if (table_.contentSize.height < table_.frame.size.height) {
+    if ([table_ contentSize].height < CGRectGetHeight([table_ frame])) {
         
-        offset = -table_.contentOffset.y;
+        offset = -[table_ contentOffset].y;
         
     } else {
         
-        offset = (table_.contentSize.height - table_.contentOffset.y) - table_.frame.size.height;
+        offset = ([table_ contentSize].height - [table_ contentOffset].y) - CGRectGetHeight([table_ frame]);
     }
     
     return offset;
@@ -110,20 +104,20 @@
  */
 - (void)relocatePullToRefreshView {
     
-    CGFloat yCoord = 0.0f;
+    CGFloat yOrigin = 0.0f;
     
-    if (table_.contentSize.height >= table_.frame.size.height) {
+    if ([table_ contentSize].height >= CGRectGetHeight([table_ frame])) {
         
-        yCoord = table_.contentSize.height;
+        yOrigin = [table_ contentSize].height;
         
     } else {
         
-        yCoord = table_.frame.size.height;
+        yOrigin = CGRectGetHeight([table_ frame]);
     }
     
-    CGRect frame = pullToRefreshView_.frame;
-    frame.origin.y = yCoord;
-    pullToRefreshView_.frame = frame;
+    CGRect frame = [pullToRefreshView_ frame];
+    frame.origin.y = yOrigin;
+    [pullToRefreshView_ setFrame:frame];
     
     [table_ addSubview:pullToRefreshView_];
 }
@@ -132,7 +126,8 @@
  * Sets the pull-to-refresh view visible or not. Visible by default
  */
 - (void)setPullToRefreshViewVisible:(BOOL)visible {
-    pullToRefreshView_.hidden = !visible;
+    
+    [pullToRefreshView_ setHidden:!visible];
 }
 
 #pragma mark -
@@ -143,18 +138,21 @@
  */
 - (void)tableViewScrolled {
     
-    if (!pullToRefreshView_.hidden && !pullToRefreshView_.isLoading) {
+    if (![pullToRefreshView_ isHidden] && ![pullToRefreshView_ isLoading]) {
         
         CGFloat offset = [self tableScrollOffset];
-        CGFloat height = -CGRectGetHeight(pullToRefreshView_.frame);
-        
-        if (offset <= 0.0f && offset >= height) {
+
+        if (offset >= 0.0f) {
+            
+            [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:offset];
+            
+        } else if (offset <= 0.0f && offset >= -[pullToRefreshView_ fixedHeight]) {
                 
-            [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStatePull withOffset:offset];
+            [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStatePull offset:offset];
             
         } else {
             
-            [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateRelease withOffset:CGFLOAT_MAX];
+            [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateRelease offset:offset];
         }
     }
 }
@@ -164,26 +162,26 @@
  */
 - (void)tableViewReleased {
     
-    if (!pullToRefreshView_.hidden && !pullToRefreshView_.isLoading) {
+    if (![pullToRefreshView_ isHidden] && ![pullToRefreshView_ isLoading]) {
         
         CGFloat offset = [self tableScrollOffset];
-        CGFloat height = -CGRectGetHeight(pullToRefreshView_.frame);
+        CGFloat height = -[pullToRefreshView_ fixedHeight];
         
         if (offset <= 0.0f && offset < height) {
             
-            [client_ MNMBottomPullToRefreshManagerClientReloadTable];
+            [client_ bottomPullToRefreshTriggered:self];
             
-            [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateLoading withOffset:CGFLOAT_MAX];
+            [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateLoading offset:offset];
             
-            [UIView animateWithDuration:0.2f animations:^{
+            [UIView animateWithDuration:kAnimationDuration animations:^{
                 
-                if (table_.contentSize.height >= table_.frame.size.height) {
+                if ([table_ contentSize].height >= CGRectGetHeight([table_ frame])) {
                 
-                    table_.contentInset = UIEdgeInsetsMake(0.0f, 0.0f, -height, 0.0f);
+                    [table_ setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, -height, 0.0f)];
                     
                 } else {
                     
-                    table_.contentInset = UIEdgeInsetsMake(height, 0.0f, 0.0f, 0.0f);
+                    [table_ setContentInset:UIEdgeInsetsMake(height, 0.0f, 0.0f, 0.0f)];
                 }
             }];
         }
@@ -195,11 +193,11 @@
  */
 - (void)tableViewReloadFinished {
     
-    table_.contentInset = UIEdgeInsetsZero;
-    
+    [table_ setContentInset:UIEdgeInsetsZero];
+
     [self relocatePullToRefreshView];
-        
-    [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateIdle withOffset:CGFLOAT_MAX];
+
+    [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:CGFLOAT_MAX];
 }
 
 @end

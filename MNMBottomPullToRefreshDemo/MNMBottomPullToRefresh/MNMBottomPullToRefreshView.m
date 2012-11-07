@@ -31,37 +31,59 @@
 /**
  * Texts to show in different states
  */
-#define MNM_BOTTOM_PTR_PULL_TEXT_KEY                                    @"MNM_BOTTOM_PTR_PULL_TEXT"
-#define MNM_BOTTOM_PTR_RELEASE_TEXT_KEY                                 @"MNM_BOTTOM_PTR_RELEASE_TEXT"
-#define MNM_BOTTOM_PTR_LOADING_TEXT_KEY                                 @"MNM_BOTTOM_PTR_LOADING_TEXT"
+#define MNM_BOTTOM_PTR_PULL_TEXT_KEY                                    NSLocalizedStringFromTable(@"MNM_BOTTOM_PTR_PULL_TEXT", MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil)
+#define MNM_BOTTOM_PTR_RELEASE_TEXT_KEY                                 NSLocalizedStringFromTable(@"MNM_BOTTOM_PTR_RELEASE_TEXT", MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil)
+#define MNM_BOTTOM_PTR_LOADING_TEXT_KEY                                 NSLocalizedStringFromTable(@"MNM_BOTTOM_PTR_LOADING_TEXT", MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil)
 
 /**
- * Defines arrow image
+ * Defines icon image
  */
-#define MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE                               @"MNMBottomPullToRefreshArrow.png"
+#define MNM_BOTTOM_PTR_ICON_BOTTOM_IMAGE                                @"MNMBottomPullToRefreshArrow.png"
+
+@interface MNMBottomPullToRefreshView()
+
+/**
+ * View that contains all controls
+ */
+@property (nonatomic, readwrite, strong) UIView *containerView;
+
+/**
+ * Image with the icon that changes with states
+ */
+@property (nonatomic, readwrite, strong) UIImageView *iconImageView;
+
+/**
+ * Activiry indicator to show while loading
+ */
+@property (nonatomic, readwrite, strong) UIActivityIndicatorView *loadingActivityIndicator;
+
+/**
+ * Label to set state message
+ */
+@property (nonatomic, readwrite, strong) UILabel *messageLabel;
+
+/**
+ * Current state of the control
+ */
+@property (nonatomic, readwrite, assign) MNMBottomPullToRefreshViewState state;
+
+/**
+ * YES to apply rotation to the icon while view is in MNMBottomPullToRefreshViewStatePull state
+ */
+@property (nonatomic, readwrite, assign) BOOL rotateIconWhileBecomingVisible;
+
+@end
 
 @implementation MNMBottomPullToRefreshView
 
+@synthesize containerView = containerView_;
+@synthesize iconImageView = iconImageView_;
+@synthesize loadingActivityIndicator = loadingActivityIndicator_;
+@synthesize messageLabel = messageLabel_;
+@synthesize state = state_;
+@synthesize rotateIconWhileBecomingVisible = rotateIconWhileBecomingVisible_;
 @dynamic isLoading;
-
-#pragma mark -
-#pragma mark Memory management
-
-/**
- * Deallocates used memory
- */
-- (void)dealloc {
-    [arrowImageView_ release];
-    arrowImageView_ = nil;
-    
-    [loadingActivityIndicator_ release];
-    loadingActivityIndicator_ = nil;
-    
-    [messageLabel_ release];
-    messageLabel_ = nil;
-    
-    [super dealloc];
-}
+@synthesize fixedHeight = fixedHeight_;
 
 #pragma mark -
 #pragma mark Initialization
@@ -76,31 +98,46 @@
     
     if (self = [super initWithFrame:frame]) {
         
-        self.backgroundColor = [UIColor colorWithWhite:0.75f alpha:1.0f];        
+        [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+        [self setBackgroundColor:[UIColor colorWithWhite:0.75f alpha:1.0f]];
         
-        UIImage *arrowImage = [UIImage imageNamed:MNM_BOTTOM_PTR_ARROW_BOTTOM_IMAGE];
+        containerView_ = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame))];
         
-        arrowImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(30.0f, round(CGRectGetHeight(frame) / 2.0f) - round(arrowImage.size.height / 2.0f), arrowImage.size.width, arrowImage.size.height)];
-        arrowImageView_.contentMode = UIViewContentModeCenter;
-        arrowImageView_.image = arrowImage;
+        [containerView_ setBackgroundColor:[UIColor clearColor]];
+        [containerView_ setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleBottomMargin];
         
-        [self addSubview:arrowImageView_];
+        [self addSubview:containerView_];
+        
+        UIImage *iconImage = [UIImage imageNamed:MNM_BOTTOM_PTR_ICON_BOTTOM_IMAGE];
+        
+        iconImageView_ = [[UIImageView alloc] initWithFrame:CGRectMake(30.0f, round(CGRectGetHeight(frame) / 2.0f) - round([iconImage size].height / 2.0f), [iconImage size].width, [iconImage size].height)];
+        [iconImageView_ setContentMode:UIViewContentModeCenter];
+        [iconImageView_ setImage:iconImage];
+        [iconImageView_ setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin];
+        
+        [containerView_ addSubview:iconImageView_];
         
         loadingActivityIndicator_ = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        loadingActivityIndicator_.center = arrowImageView_.center;
-        loadingActivityIndicator_.hidesWhenStopped = YES;
+        [loadingActivityIndicator_ setCenter:[iconImageView_ center]];
+        [loadingActivityIndicator_ setHidesWhenStopped:YES];
+        [loadingActivityIndicator_ setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin];
         
-        [self addSubview:loadingActivityIndicator_];
+        [containerView_ addSubview:loadingActivityIndicator_];
         
-        messageLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(arrowImageView_.frame) + 20.0f, 10.0f, CGRectGetWidth(frame) - CGRectGetMaxX(arrowImageView_.frame) - 40.0f, CGRectGetHeight(frame) - 20.0f)];
-        messageLabel_.backgroundColor = [UIColor clearColor];
-        messageLabel_.textColor = [UIColor whiteColor];
+        CGFloat topMargin = 10.0f;
+        CGFloat gap = 20.0f;
         
-        [self addSubview:messageLabel_];
+        messageLabel_ = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetMaxX(iconImageView_.frame) + gap, topMargin, CGRectGetWidth(frame) - CGRectGetMaxX([iconImageView_ frame]) - gap * 2.0f, CGRectGetHeight(frame) - topMargin * 2.0f)];
+        [messageLabel_ setBackgroundColor:[UIColor clearColor]];
+        [messageLabel_ setTextColor:[UIColor whiteColor]];
+        [messageLabel_ setAutoresizingMask:UIViewAutoresizingFlexibleRightMargin];
         
-        rotateArrowWhileBecomingVisible_ = YES;
+        [containerView_ addSubview:messageLabel_];
         
-        [self changeStateOfControl:MNMBottomPullToRefreshViewStateIdle withOffset:CGFLOAT_MAX];
+        fixedHeight_ = CGRectGetHeight(frame);
+        rotateIconWhileBecomingVisible_ = YES;
+        
+        [self changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:CGFLOAT_MAX];
     }
     
     return self;
@@ -109,64 +146,94 @@
 #pragma mark -
 #pragma mark Visuals
 
+/**
+ * Lays out subviews.
+ */
+- (void)layoutSubviews {
+    
+    [super layoutSubviews];
+    
+    CGSize messageSize = [[messageLabel_ text] sizeWithFont:[messageLabel_ font]];
+    
+    CGRect frame = [messageLabel_ frame];
+    frame.size.width = messageSize.width;
+    [messageLabel_ setFrame:frame];
+    
+    frame = [containerView_ frame];
+    frame.size.width = CGRectGetMaxX([messageLabel_ frame]);
+    [containerView_ setFrame:frame];
+}
+
 /*
  * Changes the state of the control depending on state_ value
  */
-- (void)changeStateOfControl:(MNMBottomPullToRefreshViewState)state withOffset:(CGFloat)offset {
+- (void)changeStateOfControl:(MNMBottomPullToRefreshViewState)state offset:(CGFloat)offset {
     
     state_ = state;
+    
+    CGFloat height = fixedHeight_;
     
     switch (state_) {
         
         case MNMBottomPullToRefreshViewStateIdle: {
             
-            arrowImageView_.transform = CGAffineTransformIdentity;
-            arrowImageView_.hidden = NO;
+            [iconImageView_ setTransform:CGAffineTransformIdentity];
+            [iconImageView_ setHidden:NO];
             
             [loadingActivityIndicator_ stopAnimating];
             
-            messageLabel_.text = NSLocalizedStringFromTable(MNM_BOTTOM_PTR_PULL_TEXT_KEY, MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil);
+            [messageLabel_ setText:MNM_BOTTOM_PTR_PULL_TEXT_KEY];
             
             break;
             
         } case MNMBottomPullToRefreshViewStatePull: {
             
-            if (rotateArrowWhileBecomingVisible_) {
+            if (rotateIconWhileBecomingVisible_) {
             
-                CGFloat angle = (-offset * M_PI) / CGRectGetHeight(self.frame);
+                CGFloat angle = (-offset * M_PI) / CGRectGetHeight([self frame]);
                 
-                arrowImageView_.transform = CGAffineTransformRotate(CGAffineTransformIdentity, angle);
+                [iconImageView_ setTransform:CGAffineTransformRotate(CGAffineTransformIdentity, angle)];
                 
             } else {
             
-                arrowImageView_.transform = CGAffineTransformIdentity;
+                [iconImageView_ setTransform:CGAffineTransformIdentity];
             }
             
-            messageLabel_.text = NSLocalizedStringFromTable(MNM_BOTTOM_PTR_PULL_TEXT_KEY, MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil);
+            [messageLabel_ setText:MNM_BOTTOM_PTR_PULL_TEXT_KEY];
             
             break;
             
         } case MNMBottomPullToRefreshViewStateRelease: {
             
-            arrowImageView_.transform = CGAffineTransformMakeRotation(M_PI);
+            [iconImageView_ setTransform:CGAffineTransformMakeRotation(M_PI)];
             
-            messageLabel_.text = NSLocalizedStringFromTable(MNM_BOTTOM_PTR_RELEASE_TEXT_KEY, MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil);
+            [messageLabel_ setText:MNM_BOTTOM_PTR_RELEASE_TEXT_KEY];
+            
+            height = fixedHeight_ + fabs(offset);
             
             break;
             
         } case MNMBottomPullToRefreshViewStateLoading: {
             
-            arrowImageView_.hidden = YES;
+            [iconImageView_ setHidden:YES];
             
             [loadingActivityIndicator_ startAnimating];
             
-            messageLabel_.text = NSLocalizedStringFromTable(MNM_BOTTOM_PTR_LOADING_TEXT_KEY, MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil);
+            [messageLabel_ setText:MNM_BOTTOM_PTR_LOADING_TEXT_KEY];
+            
+            height = fixedHeight_ + fabs(offset);
             
             break;
             
         } default:
             break;
     }
+    
+    CGRect frame = [self frame];
+    frame.size.height = height;
+    [self setFrame:frame];
+    
+    [self setNeedsLayout];
 }
 
 #pragma mark -
@@ -178,7 +245,8 @@
  * @return YES if activity indicator is animating
  */
 - (BOOL)isLoading {
-    return loadingActivityIndicator_.isAnimating;
+    
+    return [loadingActivityIndicator_ isAnimating];
 }
 
 @end

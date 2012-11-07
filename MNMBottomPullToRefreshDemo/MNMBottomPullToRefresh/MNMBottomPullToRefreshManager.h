@@ -32,7 +32,7 @@
 @protocol MNMBottomPullToRefreshManagerClient
 
 /**
- * This is the same delegate method of UIScrollViewDelegate but requiered on MNMBottomPullToRefreshManagerClient protocol
+ * This is the same delegate method of UIScrollViewDelegate but required in MNMBottomPullToRefreshManagerClient protocol
  * to warn about its implementation. Here you have to call [MNMBottomPullToRefreshManager tableViewScrolled]
  *
  * Tells the delegate when the user scrolls the content view within the receiver.
@@ -42,7 +42,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
 /**
- * This is the same delegate method of UIScrollViewDelegate but requiered on MNMBottomPullToRefreshClient protocol
+ * This is the same delegate method of UIScrollViewDelegate but required in MNMBottomPullToRefreshClient protocol
  * to warn about its implementation. Here you have to call [MNMBottomPullToRefreshManager tableViewReleased]
  *
  * Tells the delegate when dragging ended in the scroll view.
@@ -53,10 +53,12 @@
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 
 /**
- * Tells client that can reload table
+ * Tells client that refresh has been triggered
  * After reloading is completed must call [MNMBottomPullToRefreshManager tableViewReloadFinished]
+ *
+ * @param manager PTR manager
  */
-- (void)MNMBottomPullToRefreshManagerClientReloadTable;
+- (void)bottomPullToRefreshTriggered:(MNMBottomPullToRefreshManager *)manager;
 
 @end
 
@@ -65,23 +67,7 @@
 /**
  * Manager that plays Mediator role and manages relationship between pull-to-refresh view and its associated table. 
  */
-@interface MNMBottomPullToRefreshManager : NSObject {
-@private
-    /**
-     * Pull-to-refresh view
-     */    
-    MNMBottomPullToRefreshView *pullToRefreshView_;
-    
-    /**
-     * Table view which p-t-r view will be added
-     */
-    UITableView *table_;
-    
-    /**
-     * Client object that observes changes
-     */
-    id<MNMBottomPullToRefreshManagerClient> client_;
-}
+@interface MNMBottomPullToRefreshManager : NSObject
 
 /**
  * Initializes the manager object with the information to link view and table

@@ -39,22 +39,6 @@
 @synthesize table = table_;
 
 #pragma mark -
-#pragma mark Memory management
-
-/**
- * Deallocates used memory
- */
-- (void)dealloc {
-    [table_ release];
-    table_ = nil;
-    
-    [pullToRefreshManager_ release];
-    pullToRefreshManager_ = nil;
-    
-    [super dealloc];
-}
-
-#pragma mark -
 #pragma mark View cycle
 
 /**
@@ -62,22 +46,17 @@
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
-        
-    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:table_ withClient:self];
     
-    [self loadTable];
+    reloads_ = -1;
+    
+    pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:table_ withClient:self];
 }
 
-/**
- * Called when the controller’s view is released from memory
- */
-- (void)viewDidUnload {
-    [super viewDidUnload];
+- (void)viewWillAppear:(BOOL)animated {
     
-    self.table = nil;
+    [super viewWillAppear:animated];
     
-    [pullToRefreshManager_ release];
-    pullToRefreshManager_ = nil;
+    [self loadTable];
 }
 
 #pragma mark -
@@ -88,9 +67,18 @@
  */
 - (void)loadTable {
     
+    reloads_++;
+    
     [table_ reloadData];
     
     [pullToRefreshManager_ tableViewReloadFinished];
+}
+
+- (void)viewDidLayoutSubviews {
+    
+    [super viewDidLayoutSubviews];
+    
+    [pullToRefreshManager_ relocatePullToRefreshView];
 }
 
 #pragma mark -
@@ -120,14 +108,14 @@
 	
 	if (result == nil) {
         
-        result = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier] autorelease];        
+        result = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];        
         result.selectionStyle = UITableViewCellSelectionStyleNone;
         result.textLabel.backgroundColor = [UIColor clearColor];
     }
     
     result.textLabel.text = [NSString stringWithFormat:@"Row %i", indexPath.row];
     
-    UIView *backgroundView = [[[UIView alloc] initWithFrame:result.frame] autorelease];
+    UIView *backgroundView = [[UIView alloc] initWithFrame:result.frame];
     
     if (indexPath.row % 2 == 0) {
         
@@ -169,7 +157,7 @@
 #pragma mark MNMBottomPullToRefreshManagerClient
 
 /**
- * This is the same delegate method as UIScrollView but requiered on MNMBottomPullToRefreshManagerClient protocol
+ * This is the same delegate method as UIScrollView but required in MNMBottomPullToRefreshManagerClient protocol
  * to warn about its implementation. Here you have to call [MNMBottomPullToRefreshManager tableViewScrolled]
  *
  * Tells the delegate when the user scrolls the content view within the receiver.
@@ -181,7 +169,7 @@
 }
 
 /**
- * This is the same delegate method as UIScrollView but requiered on MNMBottomPullToRefreshClient protocol
+ * This is the same delegate method as UIScrollView but required in MNMBottomPullToRefreshClient protocol
  * to warn about its implementation. Here you have to call [MNMBottomPullToRefreshManager tableViewReleased]
  *
  * Tells the delegate when dragging ended in the scroll view.
@@ -194,16 +182,14 @@
 }
 
 /**
- * Tells client that can reload table.
- * After reloading is completed must call [pullToRefreshMediator_ tableViewReloadFinished]
+ * Tells client that refresh has been triggered
+ * After reloading is completed must call [MNMBottomPullToRefreshManager tableViewReloadFinished]
+ *
+ * @param manager PTR manager
  */
-- (void)MNMBottomPullToRefreshManagerClientReloadTable {
+- (void)bottomPullToRefreshTriggered:(MNMBottomPullToRefreshManager *)manager {
     
-    // Test loading
-    
-    reloads_++;
-    
-    [self performSelector:@selector(loadTable) withObject:nil afterDelay:2.0f];
+    [self performSelector:@selector(loadTable) withObject:nil afterDelay:1.0f];
 }
 
 @end
