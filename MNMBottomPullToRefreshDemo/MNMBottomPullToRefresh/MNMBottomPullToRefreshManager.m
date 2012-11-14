@@ -28,22 +28,22 @@ CGFloat const kAnimationDuration = 0.2f;
 
 @interface MNMBottomPullToRefreshManager()
 
-/**
+/*
  * Pull-to-refresh view
  */
 @property (nonatomic, readwrite, strong) MNMBottomPullToRefreshView *pullToRefreshView;
 
-/**
+/*
  * Table view which p-t-r view will be added
  */
 @property (nonatomic, readwrite, weak) UITableView *table;
 
-/**
+/*
  * Client object that observes changes
  */
 @property (nonatomic, readwrite, weak) id<MNMBottomPullToRefreshManagerClient> client;
 
-/**
+/*
  * Returns the correct offset to apply to the pull-to-refresh view, depending on contentSize
  *
  * @return The offset

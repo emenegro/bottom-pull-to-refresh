@@ -36,27 +36,32 @@ typedef enum {
 } MNMBottomPullToRefreshViewState;
 
 /**
- * Pull to refresh view. Its state is managed by an instance of MNMBottomPullToRefreshManager
+ * Pull to refresh view. Its state is managed by an instance of MNMBottomPullToRefreshManager.
  */
 @interface MNMBottomPullToRefreshView : UIView
 
 /**
- * Provides readonly access to the isLoading flag.
- * Returns YES if activity indicator is animating
+ * Returns YES if view is in Loading state.
  */
 @property (nonatomic, readonly, assign) BOOL isLoading;
 
 /**
- * Fixed height of the view
+ * Fixed height of the view. This value is used to trigger the refreshing.
  */
 @property (nonatomic, readonly) CGFloat fixedHeight;
 
 /**
  * Changes the state of the control depending on state value.
- * Receives the current ofsset of the scroll to rotate arrow
  *
- * @param state The state to set
- * @param offset The offset of the table scroll
+ * Values of *MNMBottomPullToRefreshViewState*:
+ *
+ * - `MNMBottomPullToRefreshViewStateIdle` The control is invisible right after being created or after a reloading was completed.
+ * - `MNMBottomPullToRefreshViewStatePull` The control is becoming visible and shows "pull to refresh" message.
+ * - `MNMBottomPullToRefreshViewStateRelease` The control is whole visible and shows "release to load" message.
+ * - `MNMBottomPullToRefreshViewStateLoading` The control is loading and shows activity indicator.
+ *
+ * @param state The state to set.
+ * @param offset The offset of the table scroll.
  */
 - (void)changeStateOfControl:(MNMBottomPullToRefreshViewState)state offset:(CGFloat)offset;
 

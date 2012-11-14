@@ -16,3 +16,8 @@ Installation instructions:
 3) Implement 'MNMBottomPullToRefreshManagerClient' selectors on your UIViewController in order to inform to delegate about the correct offset of the table
 
 4) You can see a this usage in 'MNMBPTRViewController'
+
+Documentation
+=============
+
+1) Execute 'appledoc appledoc.plist' in the root of the project path to generate documentation. 

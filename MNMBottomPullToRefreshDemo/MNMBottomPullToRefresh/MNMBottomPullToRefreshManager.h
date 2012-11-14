@@ -27,36 +27,37 @@
 #import <Foundation/Foundation.h>
 
 /**
- * Delegate protocol to implement by MNMBottomPullToRefreshManager observers
+ * Delegate protocol to implement by MNMBottomPullToRefreshManager observers to track and manage pull-to-refresh view behavior.
  */
 @protocol MNMBottomPullToRefreshManagerClient
 
 /**
  * This is the same delegate method of UIScrollViewDelegate but required in MNMBottomPullToRefreshManagerClient protocol
- * to warn about its implementation. Here you have to call [MNMBottomPullToRefreshManager tableViewScrolled]
+ * to warn about its implementation.
  *
- * Tells the delegate when the user scrolls the content view within the receiver.
+ * In the implementacion call [MNMBottomPullToRefreshManager tableViewScrolled] to indicate that the table is scrolling.
  *
- * @param scrollView: The scroll-view object in which the scrolling occurred.
+ * @param scrollView The scroll-view object in which the scrolling occurred.
  */
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView;
 
 /**
  * This is the same delegate method of UIScrollViewDelegate but required in MNMBottomPullToRefreshClient protocol
- * to warn about its implementation. Here you have to call [MNMBottomPullToRefreshManager tableViewReleased]
+ * to warn about its implementation.
  *
- * Tells the delegate when dragging ended in the scroll view.
+ * In the implementacion call [MNMBottomPullToRefreshManager tableViewReleased] to indicate that the table has been released.
  *
- * @param scrollView: The scroll-view object that finished scrolling the content view.
- * @param decelerate: YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
+ * @param scrollView The scroll-view object that finished scrolling the content view.
+ * @param decelerate YES if the scrolling movement will continue, but decelerate, after a touch-up gesture during a dragging operation.
  */
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate;
 
 /**
- * Tells client that refresh has been triggered
- * After reloading is completed must call [MNMBottomPullToRefreshManager tableViewReloadFinished]
+ * Tells client that refresh has been triggered.
  *
- * @param manager PTR manager
+ * After reload is completed call [MNMBottomPullToRefreshManager tableViewReloadFinished] to get back the view to Idle state
+ *
+ * @param manager The pull to refresh manager.
  */
 - (void)bottomPullToRefreshTriggered:(MNMBottomPullToRefreshManager *)manager;
 
@@ -70,38 +71,38 @@
 @interface MNMBottomPullToRefreshManager : NSObject
 
 /**
- * Initializes the manager object with the information to link view and table
+ * Initializes the manager object with the information to link the view and the table.
  *
- * @param height The height that the pull-to-refresh view will have
- * @param table Table view to link pull-to-refresh view to 
- * @param client The client that will observe behavior
+ * @param height The height that the pull-to-refresh view will have.
+ * @param table Table view to link pull-to-refresh view to.
+ * @param client The client that will observe behavior.
  */
 - (id)initWithPullToRefreshViewHeight:(CGFloat)height tableView:(UITableView *)table withClient:(id<MNMBottomPullToRefreshManagerClient>)client;
 
 /**
- * Relocate pull-to-refresh view
+ * Relocate pull-to-refresh view at the bottom of the table taking into account the frame and the content offset.
  */
 - (void)relocatePullToRefreshView;
 
 /**
  * Sets the pull-to-refresh view visible or not. Visible by default.
  *
- * @param visible Visibility flag
+ * @param visible YES to make visible.
  */
 - (void)setPullToRefreshViewVisible:(BOOL)visible;
 
 /**
- * Checks state of control depending on tableView scroll offset
+ * Has to be called when the table is being scrolled. Checks the state of control depending on the offset of the table.
  */
 - (void)tableViewScrolled;
 
 /**
- * Checks releasing of the tableView
+ * Has to be called when table dragging ends. Checks the triggering of the refresh.
  */
 - (void)tableViewReleased;
 
 /**
- * The reload of the table is completed
+ * Indicates that the reload of the table is completed. Resets the state of the view to Idle.
  */
 - (void)tableViewReloadFinished;
 

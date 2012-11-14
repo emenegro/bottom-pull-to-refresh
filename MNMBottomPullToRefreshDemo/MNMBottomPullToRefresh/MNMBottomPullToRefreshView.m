@@ -23,51 +23,51 @@
 
 #import "MNMBottomPullToRefreshView.h"
 
-/**
+/*
  * Defines the localized strings table
  */
 #define MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE                          @"MNMBottomPullToRefresh"
 
-/**
+/*
  * Texts to show in different states
  */
 #define MNM_BOTTOM_PTR_PULL_TEXT_KEY                                    NSLocalizedStringFromTable(@"MNM_BOTTOM_PTR_PULL_TEXT", MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil)
 #define MNM_BOTTOM_PTR_RELEASE_TEXT_KEY                                 NSLocalizedStringFromTable(@"MNM_BOTTOM_PTR_RELEASE_TEXT", MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil)
 #define MNM_BOTTOM_PTR_LOADING_TEXT_KEY                                 NSLocalizedStringFromTable(@"MNM_BOTTOM_PTR_LOADING_TEXT", MNM_BOTTOM_PTR_LOCALIZED_STRINGS_TABLE, nil)
 
-/**
+/*
  * Defines icon image
  */
 #define MNM_BOTTOM_PTR_ICON_BOTTOM_IMAGE                                @"MNMBottomPullToRefreshArrow.png"
 
 @interface MNMBottomPullToRefreshView()
 
-/**
+/*
  * View that contains all controls
  */
 @property (nonatomic, readwrite, strong) UIView *containerView;
 
-/**
+/*
  * Image with the icon that changes with states
  */
 @property (nonatomic, readwrite, strong) UIImageView *iconImageView;
 
-/**
+/*
  * Activiry indicator to show while loading
  */
 @property (nonatomic, readwrite, strong) UIActivityIndicatorView *loadingActivityIndicator;
 
-/**
+/*
  * Label to set state message
  */
 @property (nonatomic, readwrite, strong) UILabel *messageLabel;
 
-/**
+/*
  * Current state of the control
  */
 @property (nonatomic, readwrite, assign) MNMBottomPullToRefreshViewState state;
 
-/**
+/*
  * YES to apply rotation to the icon while view is in MNMBottomPullToRefreshViewStatePull state
  */
 @property (nonatomic, readwrite, assign) BOOL rotateIconWhileBecomingVisible;
@@ -88,7 +88,7 @@
 #pragma mark -
 #pragma mark Initialization
 
-/**
+/*
  * Initializes and returns a newly allocated view object with the specified frame rectangle.
  *
  * @param aRect: The frame rectangle for the view, measured in points.
@@ -146,7 +146,7 @@
 #pragma mark -
 #pragma mark Visuals
 
-/**
+/*
  * Lays out subviews.
  */
 - (void)layoutSubviews {
@@ -239,10 +239,8 @@
 #pragma mark -
 #pragma mark Properties
 
-/**
+/*
  * Returns state of activity indicator
- *
- * @return YES if activity indicator is animating
  */
 - (BOOL)isLoading {
     

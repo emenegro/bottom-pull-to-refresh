@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>--input</key>
+    <array>
+        <string>MNMBottomPullToRefreshDemo/MNMBottomPullToRefresh</string>
+    </array>
+    <key>--project-name</key>
+    <string>MNMBottomPullToRefresh</string>
+    <key>--project-company</key>
+    <string>Mario Negro</string>
+    <key>--company-id</key>
+    <string>com.marionegro</string>
+    <key>--no-repeat-first-par</key>
+    <true/>
+    <key>--output</key>
+    <string>.</string>
+    <key>--create-docset</key>
+    <true/>
+    <key>--install-docset</key>
+    <true/>
+    <key>--verbose</key>
+    <integer>4</integer>
+    <key>--logformat</key>
+    <integer>1</integer>
+</dict>
+</plist>
