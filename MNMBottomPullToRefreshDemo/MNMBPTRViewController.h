@@ -50,4 +50,6 @@
  */
 @property (nonatomic, readwrite, strong) IBOutlet UITableView *table;
 
++ (MNMBPTRViewController*)controller;
+
 @end

@@ -99,7 +99,7 @@
     if (self = [super initWithFrame:frame]) {
         
         [self setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
-        [self setBackgroundColor:[UIColor colorWithWhite:0.75f alpha:1.0f]];
+        [self setBackgroundColor:[UIColor colorWithWhite:0.f alpha:1.0f]];
         
         containerView_ = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth(frame), CGRectGetHeight(frame))];
         

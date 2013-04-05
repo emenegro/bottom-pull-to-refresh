@@ -38,6 +38,14 @@
 
 @synthesize table = table_;
 
+
++ (MNMBPTRViewController*)controller
+{
+	MNMBPTRViewController* controller = [[MNMBPTRViewController alloc] initWithNibName:@"MNMBPTRViewController" bundle:nil];
+	return controller;
+}
+
+
 #pragma mark -
 #pragma mark View cycle
 
@@ -50,6 +58,8 @@
     reloads_ = -1;
     
     pullToRefreshManager_ = [[MNMBottomPullToRefreshManager alloc] initWithPullToRefreshViewHeight:60.0f tableView:table_ withClient:self];
+	
+	self.title = @"Refresh";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -66,7 +76,9 @@
  * Loads the table
  */
 - (void)loadTable {
-    
+   
+	[pullToRefreshManager_ tableViewFinishedLoadData];
+	
     reloads_++;
     
     [table_ reloadData];

@@ -43,6 +43,9 @@ CGFloat const kAnimationDuration = 0.2f;
  */
 @property (nonatomic, readwrite, weak) id<MNMBottomPullToRefreshManagerClient> client;
 
+
+@property (nonatomic) BOOL hideAnimationInProgress;
+
 /*
  * Returns the correct offset to apply to the pull-to-refresh view, depending on contentSize
  *
@@ -68,7 +71,7 @@ CGFloat const kAnimationDuration = 0.2f;
 - (id)initWithPullToRefreshViewHeight:(CGFloat)height tableView:(UITableView *)table withClient:(id<MNMBottomPullToRefreshManagerClient>)client {
 
     if (self = [super init]) {
-        
+		 _hideAnimationInProgress = NO;
         client_ = client;
         table_ = table;        
         pullToRefreshView_ = [[MNMBottomPullToRefreshView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, CGRectGetWidth([table_ frame]), height)];
@@ -128,6 +131,21 @@ CGFloat const kAnimationDuration = 0.2f;
 - (void)setPullToRefreshViewVisible:(BOOL)visible {
     
     [pullToRefreshView_ setHidden:!visible];
+}
+
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if (object == table_ && [keyPath isEqualToString:@"contentOffset"])
+	{
+		NSValue* oldValue = [change objectForKey:NSKeyValueChangeOldKey];
+		NSValue* newValue = [change objectForKey:NSKeyValueChangeNewKey];
+		
+		CGFloat diff = [oldValue CGPointValue].y - [newValue CGPointValue].y;
+		CGPoint refreshViewCenter = pullToRefreshView_.center;
+		refreshViewCenter.y -= diff;
+		pullToRefreshView_.center = refreshViewCenter;
+	}
 }
 
 #pragma mark -
@@ -192,12 +210,29 @@ CGFloat const kAnimationDuration = 0.2f;
  * The reload of the table is completed
  */
 - (void)tableViewReloadFinished {
-    
-    [table_ setContentInset:UIEdgeInsetsZero];
+	if (!_hideAnimationInProgress)
+	{
+		[self relocatePullToRefreshView];
+	}
+}
 
-    [self relocatePullToRefreshView];
 
-    [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:CGFLOAT_MAX];
+- (void)tableViewFinishedLoadData
+{
+	if (!UIEdgeInsetsEqualToEdgeInsets(table_.contentInset, UIEdgeInsetsZero))
+	{
+		[pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:CGFLOAT_MAX];
+		[UIView animateWithDuration:0.3
+							  animations:^{
+								  _hideAnimationInProgress = YES;
+								  [table_ setContentInset:UIEdgeInsetsZero];
+								  [table_ addObserver:self forKeyPath:@"contentOffset" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
+							  } completion:^(BOOL finished) {
+								  [table_ removeObserver:self forKeyPath:@"contentOffset"];
+								  _hideAnimationInProgress = NO;
+								  [self relocatePullToRefreshView];
+							  }];
+	}
 }
 
 @end

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		131BB221170EFD7C00FDD3DE /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 131BB21F170EFD7C00FDD3DE /* FirstViewController.m */; };
+		131BB222170EFD7C00FDD3DE /* FirstViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 131BB220170EFD7C00FDD3DE /* FirstViewController.xib */; };
 		3ACE75131653EA6D008C81A4 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3ACE75121653EA6D008C81A4 /* Default-568h@2x.png */; };
 		5725C96F14CDBDB700241A2E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5725C96E14CDBDB700241A2E /* UIKit.framework */; };
 		5725C97114CDBDB700241A2E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5725C97014CDBDB700241A2E /* Foundation.framework */; };
@@ -24,6 +26,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		131BB21E170EFD7C00FDD3DE /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		131BB21F170EFD7C00FDD3DE /* FirstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
+		131BB220170EFD7C00FDD3DE /* FirstViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FirstViewController.xib; sourceTree = "<group>"; };
 		3ACE75121653EA6D008C81A4 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		5725C96A14CDBDB700241A2E /* MNMBottomPullToRefreshDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MNMBottomPullToRefreshDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5725C96E14CDBDB700241A2E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -98,6 +103,9 @@
 				5725C99314CDBE4600241A2E /* MNMBPTRViewController.m */,
 				5725C99514CDBE6400241A2E /* MNMBPTRViewController.xib */,
 				5725C97514CDBDB700241A2E /* Supporting Files */,
+				131BB21E170EFD7C00FDD3DE /* FirstViewController.h */,
+				131BB21F170EFD7C00FDD3DE /* FirstViewController.m */,
+				131BB220170EFD7C00FDD3DE /* FirstViewController.xib */,
 			);
 			path = MNMBottomPullToRefreshDemo;
 			sourceTree = "<group>";
@@ -154,7 +162,7 @@
 		5725C96114CDBDB600241A2E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 5725C96414CDBDB600241A2E /* Build configuration list for PBXProject "MNMBottomPullToRefreshDemo" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -184,6 +192,7 @@
 				5725C98F14CDBDFF00241A2E /* MNMBottomPullToRefreshArrow@2x.png in Resources */,
 				5725C99614CDBE6400241A2E /* MNMBPTRViewController.xib in Resources */,
 				3ACE75131653EA6D008C81A4 /* Default-568h@2x.png in Resources */,
+				131BB222170EFD7C00FDD3DE /* FirstViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,6 +208,7 @@
 				5725C99014CDBDFF00241A2E /* MNMBottomPullToRefreshManager.m in Sources */,
 				5725C99114CDBDFF00241A2E /* MNMBottomPullToRefreshView.m in Sources */,
 				5725C99414CDBE4600241A2E /* MNMBPTRViewController.m in Sources */,
+				131BB221170EFD7C00FDD3DE /* FirstViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,6 +231,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -234,6 +248,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				SDKROOT = iphoneos;
@@ -245,12 +260,17 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
