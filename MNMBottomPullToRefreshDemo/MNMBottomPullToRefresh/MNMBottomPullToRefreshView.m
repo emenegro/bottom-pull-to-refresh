@@ -153,7 +153,11 @@
     
     [super layoutSubviews];
     
+#if (__IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0)
     CGSize messageSize = [[messageLabel_ text] sizeWithFont:[messageLabel_ font]];
+#else
+    CGSize messageSize = [[messageLabel_ text] sizeWithAttributes:@{NSFontAttributeName:[messageLabel_ font]}];
+#endif
     
     CGRect frame = [messageLabel_ frame];
     frame.size.width = messageSize.width;
