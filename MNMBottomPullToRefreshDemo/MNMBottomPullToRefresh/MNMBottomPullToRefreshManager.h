@@ -83,6 +83,7 @@
  * Relocate pull-to-refresh view at the bottom of the table taking into account the frame and the content offset.
  */
 - (void)relocatePullToRefreshView;
+
 - (NSString *)addByPhong;
 /**
  * Sets the pull-to-refresh view visible or not. Visible by default.
