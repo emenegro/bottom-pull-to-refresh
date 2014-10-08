@@ -77,6 +77,11 @@ CGFloat const kAnimationDuration = 0.2f;
     return self;
 }
 
+- (NSString *)addByPhong
+{
+    return @"phong";
+}
+
 #pragma mark -
 #pragma mark Visuals
 
