@@ -35,9 +35,4 @@
  */
 @property (strong, nonatomic) UIWindow *window;
 
-/**
- * Provides read-write access to the vieController
- */
-@property (strong, nonatomic) MNMBPTRViewController *viewController;
-
 @end

@@ -106,4 +106,9 @@
  */
 - (void)tableViewReloadFinished;
 
+/**
+ *Has to be called ater data did finish loading and before tableViewReloadFinished
+ */
+- (void)tableViewFinishedLoadData;
+
 @end

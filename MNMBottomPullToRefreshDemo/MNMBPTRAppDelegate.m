@@ -23,11 +23,11 @@
 
 #import "MNMBPTRAppDelegate.h"
 #import "MNMBPTRViewController.h"
+#import "FirstViewController.h"
 
 @implementation MNMBPTRAppDelegate
 
 @synthesize window = _window;
-@synthesize viewController = _viewController;
 
 #pragma mark -
 #pragma mark Memory management
@@ -49,9 +49,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.viewController = [[MNMBPTRViewController alloc] initWithNibName:@"MNMBPTRViewController" bundle:nil];
-//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
-    self.window.rootViewController = self.viewController;
+	
+	FirstViewController* controller = [FirstViewController controller];
+	UINavigationController* navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    self.window.rootViewController = navController;
     
     [self.window makeKeyAndVisible];
     
