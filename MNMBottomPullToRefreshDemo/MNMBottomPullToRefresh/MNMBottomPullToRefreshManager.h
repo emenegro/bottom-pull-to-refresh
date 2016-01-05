@@ -106,4 +106,11 @@
  */
 - (void)tableViewReloadFinished;
 
+/**
+ *  Custom text for refresh view.
+ */
+@property (nonatomic, weak) NSString *pullText;
+@property (nonatomic, weak) NSString *releaseText;
+@property (nonatomic, weak) NSString *loadingText;
+
 @end

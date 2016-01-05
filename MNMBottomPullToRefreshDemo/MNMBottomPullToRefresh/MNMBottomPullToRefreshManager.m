@@ -200,4 +200,30 @@ CGFloat const kAnimationDuration = 0.2f;
     [pullToRefreshView_ changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:CGFLOAT_MAX];
 }
 
+#pragma mark -
+#pragma mark properties
+- (void)setPullText:(NSString *)pullText {
+    pullToRefreshView_.pullText = pullText;
+}
+
+- (void)setReleaseText:(NSString *)releaseText {
+    pullToRefreshView_.releaseText = releaseText;
+}
+
+- (void)setLoadingText:(NSString *)loadingText {
+    pullToRefreshView_.loadingText = loadingText;
+}
+
+- (NSString *)pullText {
+    return pullToRefreshView_.pullText;
+}
+
+- (NSString *)releaseText {
+    return pullToRefreshView_.releaseText;
+}
+
+- (NSString *)loadingText {
+    return pullToRefreshView_.loadingText;
+}
+
 @end

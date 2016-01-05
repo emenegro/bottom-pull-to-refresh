@@ -84,6 +84,9 @@
 @synthesize rotateIconWhileBecomingVisible = rotateIconWhileBecomingVisible_;
 @dynamic isLoading;
 @synthesize fixedHeight = fixedHeight_;
+@synthesize pullText = pullText_;
+@synthesize releaseText = releaseText_;
+@synthesize loadingText = loadingText_;
 
 #pragma mark -
 #pragma mark Initialization
@@ -137,6 +140,10 @@
         fixedHeight_ = CGRectGetHeight(frame);
         rotateIconWhileBecomingVisible_ = YES;
         
+        pullText_ = MNM_BOTTOM_PTR_PULL_TEXT_KEY;
+        releaseText_ = MNM_BOTTOM_PTR_RELEASE_TEXT_KEY;
+        loadingText_ = MNM_BOTTOM_PTR_LOADING_TEXT_KEY;
+        
         [self changeStateOfControl:MNMBottomPullToRefreshViewStateIdle offset:CGFLOAT_MAX];
     }
     
@@ -182,7 +189,7 @@
             
             [loadingActivityIndicator_ stopAnimating];
             
-            [messageLabel_ setText:MNM_BOTTOM_PTR_PULL_TEXT_KEY];
+            [messageLabel_ setText:pullText_];
             
             break;
             
@@ -199,7 +206,7 @@
                 [iconImageView_ setTransform:CGAffineTransformIdentity];
             }
             
-            [messageLabel_ setText:MNM_BOTTOM_PTR_PULL_TEXT_KEY];
+            [messageLabel_ setText:pullText_];
             
             break;
             
@@ -207,7 +214,7 @@
             
             [iconImageView_ setTransform:CGAffineTransformMakeRotation(M_PI)];
             
-            [messageLabel_ setText:MNM_BOTTOM_PTR_RELEASE_TEXT_KEY];
+            [messageLabel_ setText:releaseText_];
             
             height = fixedHeight_ + fabs(offset);
             
@@ -219,7 +226,7 @@
             
             [loadingActivityIndicator_ startAnimating];
             
-            [messageLabel_ setText:MNM_BOTTOM_PTR_LOADING_TEXT_KEY];
+            [messageLabel_ setText:loadingText_];
             
             height = fixedHeight_ + fabs(offset);
             
